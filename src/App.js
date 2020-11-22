@@ -1,6 +1,9 @@
 import './App.css';
 import React, { useState } from 'react'
 import Contact from './Components/Contact';
+import PersonForm from './Components/PersonForm';
+import Filter from './Components/Filter';
+import Contacts from './Components/Contacts';
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -39,7 +42,6 @@ const App = () => {
     setNewNumber('');
   }
 
-  const personsToShow = persons.filter(person => new RegExp(`^${searchValue}`, 'i').test(person.name))
 
 
   return (
@@ -47,16 +49,12 @@ const App = () => {
       <h1>Phonebook</h1>
 
       <h2>Add a New Contact:</h2>
-      <form onSubmit={addPerson}>
-        <div>Name: <input name="name" value={newName} onChange={handleChange}/></div>
-        <div>Number: <input name="number" value={newNumber} onChange={handleChange}/></div>
-        <div><button type="submit">Add</button></div>
-      </form>
+      
+      <PersonForm newName={newName} newNumber={newNumber} handleChange={handleChange} addPerson={addPerson}/>
+      
       <h2>Numbers</h2>
-      <form>
-        <div>Filter contacts: <input name="search" value={searchValue} onChange={handleChange}/></div>
-      </form>
-      <ul>{personsToShow.map(person => <Contact key={person.id} name={person.name} number={person.number}/>)}</ul>
+      <Filter handleChange={handleChange} searchValue={searchValue}/>
+      <Contacts persons={persons} searchValue={searchValue}/>
     </div>
   )
 }
