@@ -11,11 +11,13 @@ const App = () => {
   ])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
+  const [ searchValue, setSearchValue ] = useState('')
 
   const handleChange = (event) => {
     switch(event.target.name) {
       case "name" : setNewName(event.target.value); break;
       case "number": setNewNumber(event.target.value); break;
+      case "search": setSearchValue(event.target.value); break;
       default: break;
     }
   }
@@ -37,6 +39,9 @@ const App = () => {
     setNewNumber('');
   }
 
+  const personsToShow = persons.filter(person => new RegExp(`^${searchValue}`, 'i').test(person.name))
+
+
   return (
     <div>
       <h1>Phonebook</h1>
@@ -48,8 +53,10 @@ const App = () => {
         <div><button type="submit">Add</button></div>
       </form>
       <h2>Numbers</h2>
-
-      <ul>{persons.map(person => <Contact key={person.id} name={person.name} number={person.number}/>)}</ul>
+      <form>
+        <div>Filter contacts: <input name="search" value={searchValue} onChange={handleChange}/></div>
+      </form>
+      <ul>{personsToShow.map(person => <Contact key={person.id} name={person.name} number={person.number}/>)}</ul>
     </div>
   )
 }
