@@ -49,7 +49,6 @@ const App = () => {
       <h1>Phonebook</h1>
 
       <h2>Add a New Contact:</h2>
-      
       <PersonForm newName={newName} newNumber={newNumber} handleChange={handleChange} addPerson={addPerson}/>
       
       <h2>Numbers</h2>
