@@ -2,8 +2,8 @@ import React from 'react';
 import Contact from './Contact';
 
 function Contacts({persons, searchValue}) {
-
-
+  console.log(persons);
+  
   const personsToShow = persons.filter(person => new RegExp(`^${searchValue}`, 'i').test(person.name))
   .sort((a, b) => {
     let nameA = a.name.toLowerCase();
