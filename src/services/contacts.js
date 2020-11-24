@@ -16,5 +16,11 @@ const remove = (id) => {
     return axios
         .delete(`${baseUrl}/${id}`)
 }
+
+const update = (id, newContact) => {
+    return axios
+        .put(`${baseUrl}/${id}`, newContact)
+        .then(response => response.data)
+}
 // eslint-disable-next-line import/no-anonymous-default-export
-export default {getAll, create, remove};
+export default {getAll, create, remove, update};

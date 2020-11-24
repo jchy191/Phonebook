@@ -32,16 +32,30 @@ const App = () => {
 
   const handleAddPerson = (event) => {
     event.preventDefault();
-    
-    if (persons.find(person => person.name === newName)) {
-      alert(`${newName} is already added to the phonebook!`)
+    const person = persons.find(person => person.name === newName);
+
+    if (person) {
+      window.confirm(`${newName} is already added to the phonebook, replace the old number with the new one?`);
+      const changedPerson = {...person, number: newNumber};
+      
+      contactServices.update(person.id, changedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => person.name !== newName ? person : returnedPerson));
+          setNewName('');
+          setNewNumber('');
+        })
+        .catch(error => {
+          console.log(error);
+        })
       return;
     }
+
     const newPerson = {
       name: newName,
       number: newNumber,
       id: uuidv4(),
     };
+
     contactServices.create(newPerson)
       .then(response => {
         setPersons(persons.concat(response));
@@ -51,11 +65,14 @@ const App = () => {
   }
 
   const handleDeletePerson = (event) => {
+    const name = event.target.name;
     const id = event.target.id;
-    contactServices.remove(id)
-      .then(response => {
-        setPersons(persons.filter(person => person.id !== id))
-      })
+    if (window.confirm(`Delete ${name} from phonebook? Note that this action is not reversible.`)) {
+      contactServices.remove(id)
+        .then(response => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+    } 
   }
 
 
