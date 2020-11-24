@@ -5,21 +5,23 @@ import contactServices from './services/contacts';
 import PersonForm from './Components/PersonForm';
 import Filter from './Components/Filter';
 import Contacts from './Components/Contacts';
+import Notification from './Components/Notification';
 
 const App = () => {
   const [ persons, setPersons ] = useState([]);
   const [ newName, setNewName ] = useState('');
   const [ newNumber, setNewNumber ] = useState('');
   const [ searchValue, setSearchValue ] = useState('');
+  const [ message, setMessage ] = useState(null);
+  const [ isError, setIsError ] = useState(false);
 
   useEffect(() => {
     contactServices
       .getAll()
       .then(response => {
-        console.log('success', response);
         setPersons(response);
       })
-  },[])
+  },[isError])
 
   const handleChange = (event) => {
     switch(event.target.name) {
@@ -38,15 +40,7 @@ const App = () => {
       window.confirm(`${newName} is already added to the phonebook, replace the old number with the new one?`);
       const changedPerson = {...person, number: newNumber};
       
-      contactServices.update(person.id, changedPerson)
-        .then(returnedPerson => {
-          setPersons(persons.map(person => person.name !== newName ? person : returnedPerson));
-          setNewName('');
-          setNewNumber('');
-        })
-        .catch(error => {
-          console.log(error);
-        })
+      updatePerson(person.id, changedPerson)
       return;
     }
 
@@ -55,13 +49,38 @@ const App = () => {
       number: newNumber,
       id: uuidv4(),
     };
+    addPerson(newPerson)
 
+  }
+
+  const addPerson = (newPerson) => {
     contactServices.create(newPerson)
       .then(response => {
         setPersons(persons.concat(response));
         setNewName('');
         setNewNumber('');
+        setMessage(`${newPerson.name} has been added`);
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
       })
+  }
+
+  const updatePerson = (id, changedPerson) => {
+    contactServices.update(id, changedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => person.name !== newName ? person : returnedPerson));
+          setNewName('');
+          setNewNumber('');
+          setMessage(`${changedPerson.name} has been updated`);
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        })
+        .catch(error => {
+          console.log(error);
+          
+        })
   }
 
   const handleDeletePerson = (event) => {
@@ -70,16 +89,27 @@ const App = () => {
     if (window.confirm(`Delete ${name} from phonebook? Note that this action is not reversible.`)) {
       contactServices.remove(id)
         .then(response => {
-          setPersons(persons.filter(person => person.id !== id))
+          setPersons(persons.filter(person => person.id !== id));
+          setMessage(`${name} has been removed`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000)
+        })
+        .catch(error => {
+          setIsError(true);
+          setMessage(`${name} has already been removed from the server`);
+          setTimeout(() => {
+            setMessage(null);
+            setIsError(false);
+          }, 5000)
         })
     } 
   }
 
-
-
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={message} isError={isError} />
 
       <h2>Add a New Contact:</h2>
       <PersonForm newName={newName} newNumber={newNumber} handleChange={handleChange} addPerson={handleAddPerson}/>
@@ -89,6 +119,8 @@ const App = () => {
       <Contacts persons={persons} searchValue={searchValue} handleDelete={handleDeletePerson}/>
     </div>
   )
+
+  
 }
 
 export default App
