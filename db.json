@@ -1,24 +1,9 @@
 {
   "persons": [
     {
-      "name": "ZABA",
-      "number": "1312",
-      "id": "b30df2f0-5a97-4dc2-9cd2-7c186d08d7f9"
-    },
-    {
-      "name": "Joshuaaaa",
-      "number": "23439420",
-      "id": "4350410b-40a6-44ba-8bb6-b91b318ac12e"
-    },
-    {
-      "name": "Za",
-      "number": "132",
-      "id": "bfa2a749-8ef0-4197-a5c9-cbd2c161fa00"
-    },
-    {
-      "name": "Joshuaaaaa",
-      "number": "3423423",
-      "id": "b192ef6e-8d21-4f5a-93f4-fc4a33d2fec1"
+      "name": "Dad",
+      "number": "9123214",
+      "id": "8ef9a550-ebfa-4eb7-8946-20ba8f25994a"
     }
   ]
 }
