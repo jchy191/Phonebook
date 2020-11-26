@@ -64,6 +64,7 @@ const App = () => {
             setMessage(null)
           }, 5000)
       })
+      .catch(errorHandler)
   }
 
   const updatePerson = (id, changedPerson) => {
@@ -77,10 +78,7 @@ const App = () => {
             setMessage(null)
           }, 5000)
         })
-        .catch(error => {
-          console.log(error);
-          
-        })
+        .catch(errorHandler)
   }
 
   const handleDeletePerson = (event) => {
@@ -95,15 +93,17 @@ const App = () => {
             setMessage(null);
           }, 5000)
         })
-        .catch(error => {
-          setIsError(true);
-          setMessage(`${name} has already been removed from the server`);
-          setTimeout(() => {
-            setMessage(null);
-            setIsError(false);
-          }, 5000)
-        })
+        .catch(errorHandler)
     } 
+  }
+
+  const errorHandler = (error) => {
+    setIsError(true);
+      setMessage(`${error.error}`);
+      setTimeout(() => {
+        setMessage(null);
+        setIsError(false);
+      }, 5000)
   }
 
   return (
